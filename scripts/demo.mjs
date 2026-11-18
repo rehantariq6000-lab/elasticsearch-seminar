@@ -1,5 +1,6 @@
 // npm run demo               run the whole live demo against your Elasticsearch and check every result
 // npm run demo -- --step     pause after every step (press Enter), handy as a console fallback on stage
+// npm run demo -- --preview  show every request and expected result without connecting to Elasticsearch
 // npm run demo -- --index pair-07
 //
 // The requests live in demo/requests.mjs. Run "npm run es:setup" first.
@@ -7,8 +8,10 @@ import { createInterface } from 'node:readline/promises';
 import { steps } from '../demo/requests.mjs';
 import { es, parseArgs, waitForElasticsearch } from './lib.mjs';
 
-const args = parseArgs(process.argv.slice(2));
-const stepMode = process.argv.includes('--step');
+const flags = process.argv.slice(2);
+const stepMode = flags.includes('--step');
+const preview = flags.includes('--preview');
+const args = parseArgs(flags.filter((flag) => flag !== '--step' && flag !== '--preview'));
 
 const green = (text) => `\x1b[32m${text}\x1b[0m`;
 const red = (text) => `\x1b[31m${text}\x1b[0m`;
@@ -66,7 +69,11 @@ function summarize(response) {
   return JSON.stringify(body);
 }
 
-await waitForElasticsearch();
+if (preview) {
+  console.log('Rehearsal preview. Expected results come from the demo script.');
+} else {
+  await waitForElasticsearch();
+}
 
 const rl = stepMode ? createInterface({ input: process.stdin, output: process.stdout }) : null;
 const all = steps(args.index);
@@ -83,18 +90,27 @@ for (const step of all) {
   console.log(dim(`${step.method} ${step.path}`));
   if (step.body) console.log(dim(JSON.stringify(step.body)));
 
-  const response = await es(step.method, step.path, step.body);
-  console.log(summarize(response));
+  if (preview) {
+    console.log(`  Expected: ${JSON.stringify(step.expect)}`);
+  } else {
+    const response = await es(step.method, step.path, step.body);
+    console.log(summarize(response));
 
-  const problems = check(step, response);
-  if (problems.length === 0) console.log(green('  OK'));
-  else {
-    failures++;
-    console.log(red(`  FAILED: ${problems.join('; ')}`));
+    const problems = check(step, response);
+    if (problems.length === 0) console.log(green('  OK'));
+    else {
+      failures++;
+      console.log(red(`  FAILED: ${problems.join('; ')}`));
+    }
   }
   if (rl) await rl.question(dim('  (Enter for the next step) '));
 }
 rl?.close();
+
+if (preview) {
+  console.log(`\nPreviewed ${all.length} steps.`);
+  process.exit(0);
+}
 
 console.log(
   failures === 0
