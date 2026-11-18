@@ -1,0 +1,46 @@
+# Pair lab starter (Kibana Dev Tools)
+# Paste this into the console. Select a request and press Ctrl+Enter (Cmd+Enter on macOS).
+# Own index? Replace "courses" with your index name in every request.
+
+
+# Check first: do you have 42 courses, and no course 13 yet?
+GET courses/_count
+
+GET courses/_doc/13
+
+
+# TASK 1: Match. Either word, then both words.
+# Predict the IDs before you run each query.
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "match": { "title": "web development" }
+  }
+}
+
+# Change one condition at a time: add "operator": "and" to require both words.
+# GET courses/_search
+# {
+#   "_source": ["code", "title", "ects"],
+#   "query": {
+#     "match": { "title": { "query": "web development", "operator": "and" } }
+#   }
+# }
+
+
+# TASK 2: Filter. Both words, at least 5 ECTS.
+# Match in bool.must, range in bool.filter. Write the query yourself.
+
+
+# TASK 3: Index. Add Advanced Web Development as ID 13, then rerun your task 2 query.
+# PUT courses/_doc/13?refresh=wait_for
+# {
+#   "course_id": 13,
+#   "code": "WEB320",
+#   "title": "Advanced Web Development",
+#   "ects": 5
+# }
+
+
+# STRETCH: highlighting, the typo "develpment" with fuzziness, a must_not on the tag "sql".

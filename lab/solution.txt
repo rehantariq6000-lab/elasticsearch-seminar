@@ -1,0 +1,85 @@
+# Pair lab solution (Kibana Dev Tools)
+
+
+# TASK 1a: either word (the default). Expected IDs: 8, 10, 11, 12
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "match": { "title": "web development" }
+  }
+}
+
+# TASK 1b: both words. Expected IDs: 10, 12
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "match": { "title": { "query": "web development", "operator": "and" } }
+  }
+}
+
+
+# TASK 2: both words and at least 5 ECTS. Expected ID: 10 (course 12 is worth only 3 ECTS)
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "title": { "query": "web development", "operator": "and" } } }
+      ],
+      "filter": [
+        { "range": { "ects": { "gte": 5 } } }
+      ]
+    }
+  }
+}
+
+
+# TASK 3a: index course 13
+PUT courses/_doc/13?refresh=wait_for
+{
+  "course_id": 13,
+  "code": "WEB320",
+  "title": "Advanced Web Development",
+  "ects": 5
+}
+
+# TASK 3b: rerun the task 2 query. Expected IDs: 10, 13
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "title": { "query": "web development", "operator": "and" } } }
+      ],
+      "filter": [
+        { "range": { "ects": { "gte": 5 } } }
+      ]
+    }
+  }
+}
+
+
+# STRETCH: highlighting, a typo with fuzziness, and a must_not on the tag sql
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "title": { "query": "develpment", "fuzziness": "AUTO" } } }
+      ],
+      "must_not": [
+        { "term": { "tags": "sql" } }
+      ]
+    }
+  },
+  "highlight": { "fields": { "title": {} } }
+}
+
+
+# CLEANUP: remove course 13 again
+DELETE courses/_doc/13?refresh=true
