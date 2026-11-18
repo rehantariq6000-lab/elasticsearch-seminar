@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Course search</title>
+  <style>
+    :root {
+      --ink: #111214;
+      --muted: #5b5f66;
+      --panel: #f1f1ee;
+      --line: #dadad4;
+      --mark: #fec514;
+      --paper: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --ink: #f2f2ee; --muted: #a3a7ae; --panel: #1b1c1f; --line: #2c2e33; --paper: #111214; }
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 Calibri, "Segoe UI", system-ui, sans-serif; }
+    h1, h2 { font-family: Cambria, Georgia, serif; margin: 0; }
+    mark { background: var(--mark); color: #111214; padding: 0 2px; border-radius: 2px; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 80px; }
+
+    header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+    h1 { font-size: 34px; letter-spacing: -0.01em; }
+    .tagline { color: var(--muted); margin: 4px 0 0; }
+    .status { font-size: 13px; color: var(--muted); display: flex; gap: 14px; }
+    .status b { color: var(--ink); }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--line); margin-right: 6px; }
+    .dot.ok { background: #2da44e; } .dot.bad { background: #cf222e; }
+
+    .searchbar { margin-top: 28px; position: relative; }
+    .searchbar input[type=search] {
+      width: 100%; font: inherit; font-size: 22px; padding: 16px 22px; border-radius: 40px;
+      border: 2px solid var(--line); background: var(--paper); color: var(--ink); outline: none;
+    }
+    .searchbar input[type=search]:focus { border-color: var(--ink); }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
+    .label { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    button, select {
+      font: inherit; font-size: 14px; color: var(--ink); background: var(--panel); border: 1px solid transparent;
+      border-radius: 20px; padding: 6px 14px; cursor: pointer;
+    }
+    button:hover, select:hover { border-color: var(--ink); }
+    button.active { background: var(--mark); color: #111214; font-weight: 700; }
+    button.primary { background: var(--ink); color: var(--paper); }
+    select { border-radius: 8px; }
+
+    .meta { margin: 22px 0 8px; color: var(--muted); font-size: 14px; min-height: 22px; }
+    .layout { display: grid; grid-template-columns: 220px 1fr; gap: 28px; margin-top: 8px; }
+    @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } }
+    aside h2 { font-size: 13px; font-family: inherit; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+    aside .facet { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+    .count { opacity: .65; font-size: 12px; margin-left: 4px; }
+
+    .card { background: var(--panel); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; position: relative; }
+    .card h3 { margin: 0 0 2px; font-family: Cambria, Georgia, serif; font-size: 20px; }
+    .card .sub { color: var(--muted); font-size: 14px; margin-bottom: 6px; }
+    .card p { margin: 0 0 8px; }
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag { font-size: 12px; border: 1px solid var(--line); border-radius: 10px; padding: 0 8px; color: var(--muted); }
+    .score { position: absolute; top: 14px; right: 16px; font: 12px/1 ui-monospace, Menlo, Consolas, monospace; color: var(--muted); }
+    .del { position: absolute; bottom: 12px; right: 14px; font-size: 12px; padding: 2px 10px; background: transparent; border-color: var(--line); color: var(--muted); }
+
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 760px) { .compare { grid-template-columns: 1fr; } }
+    .compare h2 { font-size: 22px; margin-bottom: 4px; }
+    .compare .big { font: 700 44px/1.1 Cambria, Georgia, serif; margin: 16px 0; }
+    .compare .sql code { display: block; background: #111214; color: #e8e8e8; padding: 10px 14px; border-radius: 8px; font: 13px ui-monospace, Menlo, Consolas, monospace; margin: 8px 0 14px; white-space: pre-wrap; }
+
+    .pager { display: flex; gap: 10px; align-items: center; margin-top: 10px; color: var(--muted); font-size: 14px; }
+    details { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 16px; }
+    summary { cursor: pointer; font-weight: 700; }
+    form.add { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 14px; }
+    form.add input, form.add textarea { font: inherit; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+    form.add .w2 { grid-column: span 2; } form.add .w3 { grid-column: span 3; } form.add .w6 { grid-column: span 6; }
+    @media (max-width: 760px) { form.add { grid-template-columns: 1fr 1fr; } form.add .w2, form.add .w3, form.add .w6 { grid-column: span 2; } }
+    .note { color: var(--muted); font-size: 14px; }
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 20px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Course search</h1>
+      <p class="tagline">PostgreSQL keeps the truth. Elasticsearch finds things.</p>
+    </div>
+    <div class="status" id="status" aria-live="polite">
+      <span><span class="dot" id="dot-es"></span>Elasticsearch <b id="v-es">...</b></span>
+      <span><span class="dot" id="dot-pg"></span>PostgreSQL <b id="v-pg">...</b></span>
+    </div>
+  </header>
+
+  <div class="searchbar">
+    <input id="q" type="search" placeholder="Search courses, try a typo: databse" autocomplete="off" autofocus aria-label="Search courses">
+  </div>
+
+  <div class="row">
+    <span class="label">Try</span>
+    <button type="button" data-q="databse">databse</button>
+    <button type="button" data-q="web developmnt">web developmnt</button>
+    <button type="button" data-q="serch engin">serch engin</button>
+    <button type="button" data-q="dokcer">dokcer</button>
+    <button type="button" data-q="how search engines find documents">a sentence</button>
+  </div>
+
+  <div class="row">
+    <span class="label">Mode</span>
+    <button type="button" id="mode-es" class="active">Elasticsearch</button>
+    <button type="button" id="mode-cmp">Compare with SQL LIKE</button>
+    <span class="label" style="margin-left:14px">Minimum ECTS</span>
+    <select id="ects" aria-label="Minimum ECTS">
+      <option value="">any</option><option>3</option><option>5</option><option>6</option>
+    </select>
+  </div>
+
+  <div class="meta" id="meta" aria-live="polite"></div>
+
+  <div id="app-es" class="layout">
+    <aside>
+      <h2>Tags</h2><div class="facet" id="facet-tags"></div>
+    </aside>
+    <main>
+      <div id="results"></div>
+      <div class="pager" id="pager"></div>
+    </main>
+  </div>
+
+  <div id="app-cmp" class="compare" hidden>
+    <section class="sql">
+      <h2>SQL: ILIKE '%...%'</h2>
+      <code id="sql-text"></code>
+      <div id="sql-results"></div>
+    </section>
+    <section>
+      <h2>Elasticsearch</h2>
+      <code style="display:block;background:#111214;color:#e8e8e8;padding:10px 14px;border-radius:8px;font:13px ui-monospace,Menlo,Consolas,monospace;margin:8px 0 14px;white-space:pre-wrap">match + fuzziness AUTO</code>
+      <div id="es-results"></div>
+    </section>
+  </div>
+
+  <details id="admin">
+    <summary>Write side: add a course, rebuild the index</summary>
+    <p class="note">Every write goes to PostgreSQL first, then a copy is indexed in Elasticsearch. After adding, search for the new title: it is findable immediately (refresh=wait_for).</p>
+    <form class="add" id="add-form">
+      <input class="w2" name="code" placeholder="Code, e.g. WEB320" required>
+      <input class="w3" name="title" placeholder="Title" required>
+      <input name="ects" type="number" min="1" max="30" placeholder="ECTS" required>
+      <input class="w3" name="lecturer" placeholder="Lecturer" value="Dr. Weber" required>
+      <input class="w3" name="tags" placeholder="Tags, comma separated: web, backend">
+      <input class="w6" name="description" placeholder="Description (the text that gets searched)" required>
+      <button class="primary w2" type="submit">Add course</button>
+      <button class="w2" type="button" id="reindex">Rebuild index from PostgreSQL</button>
+    </form>
+  </details>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script type="module">
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const state = { q: '', minEcts: '', tag: '', page: 1, mode: 'es' };
+  let controller;
+
+  // ---- state in the URL, so a search can be shared and reloaded -------------------
+  function readUrl() {
+    const p = new URLSearchParams(location.search);
+    state.q = p.get('q') ?? ''; state.minEcts = p.get('minEcts') ?? ''; state.tag = p.get('tag') ?? '';
+    state.page = Number(p.get('page') ?? 1) || 1; state.mode = p.get('mode') === 'compare' ? 'compare' : 'es';
+  }
+  function writeUrl() {
+    const p = new URLSearchParams();
+    if (state.q) p.set('q', state.q); if (state.minEcts) p.set('minEcts', state.minEcts);
+    if (state.tag) p.set('tag', state.tag); if (state.page > 1) p.set('page', state.page);
+    if (state.mode === 'compare') p.set('mode', 'compare');
+    history.replaceState(null, '', p.size ? `?${p}` : location.pathname);
+  }
+  function syncControls() {
+    $('q').value = state.q; $('ects').value = state.minEcts;
+    $('mode-es').classList.toggle('active', state.mode === 'es');
+    $('mode-cmp').classList.toggle('active', state.mode === 'compare');
+    $('app-es').hidden = state.mode !== 'es'; $('app-cmp').hidden = state.mode !== 'compare';
+  }
+
+  // ---- rendering ---------------------------------------------------------------
+  function card(hit, { score = true, remove = true } = {}) {
+    const hl = hit.highlight ?? {};
+    const title = hl.title ?? esc(hit.title);
+    const desc = Array.isArray(hl.description) && hl.description.length ? hl.description.join(' ... ') : esc(hit.description);
+    return `<article class="card">
+      ${score && hit.score != null ? `<span class="score">score ${Number(hit.score).toFixed(2)}</span>` : ''}
+      <h3>${title}</h3>
+      <div class="sub">${esc(hit.code)} &middot; ${esc(hit.ects)} ECTS &middot; ${esc(hit.lecturer)} &middot; id ${esc(hit.id ?? hit.course_id)}</div>
+      <p>${desc}</p>
+      <div class="tags">${(hit.tags ?? []).map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+      ${remove ? `<button class="del" data-del="${esc(hit.id ?? hit.course_id)}" title="Delete from PostgreSQL and the index">Delete</button>` : ''}
+    </article>`;
+  }
+  const chip = (label, count, active, attrs) =>
+    `<button type="button" class="${active ? 'active' : ''}" ${attrs}>${esc(label)}<span class="count">${count}</span></button>`;
+
+  function renderEs(data) {
+    $('meta').textContent = `${data.total} result${data.total === 1 ? '' : 's'} in ${data.tookMs} ms (Elasticsearch)`;
+    $('results').innerHTML = data.hits.length ? data.hits.map((h) => card(h)).join('') :
+      '<p class="note">No courses match. Try removing a filter.</p>';
+    $('facet-tags').innerHTML = data.facets.tags.map((b) => chip(b.key, b.doc_count, state.tag === b.key, `data-tag="${esc(b.key)}"`)).join('');
+    const pages = Math.max(1, Math.ceil(data.total / data.size));
+    $('pager').innerHTML = pages > 1 ? `<button type="button" data-page="${state.page - 1}" ${state.page <= 1 ? 'disabled' : ''}>Previous</button>
+      <span>Page ${state.page} of ${pages}</span>
+      <button type="button" data-page="${state.page + 1}" ${state.page >= pages ? 'disabled' : ''}>Next</button>` : '';
+  }
+
+  function renderCompare(sql, es) {
+    $('sql-text').textContent = `SELECT * FROM course\nWHERE title ILIKE '%${state.q}%'\n   OR description ILIKE '%${state.q}%';`;
+    $('sql-results').innerHTML = sql.total === 0
+      ? `<div class="big">0 rows</div><p class="note">LIKE sees characters, not words. A typo, a different word form or a sentence finds nothing.</p>`
+      : `<p class="note">${sql.total} row${sql.total === 1 ? '' : 's'}, no ranking</p>` + sql.hits.map((h) => card(h, { score: false, remove: false })).join('');
+    $('es-results').innerHTML = `<p class="note">${es.total} result${es.total === 1 ? '' : 's'} in ${es.tookMs} ms, ranked by relevance</p>` +
+      (es.hits.length ? es.hits.map((h) => card(h, { remove: false })).join('') : '<p class="note">No match.</p>');
+    $('meta').textContent = `SQL LIKE found ${sql.total}, Elasticsearch found ${es.total}`;
+  }
+
+  // ---- data --------------------------------------------------------------------
+  async function api(path, options) {
+    const res = await fetch(path, options);
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).message ?? `HTTP ${res.status}`);
+    return res.status === 204 ? null : res.json();
+  }
+
+  async function run() {
+    controller?.abort(); controller = new AbortController();
+    const { signal } = controller;
+    writeUrl(); syncControls();
+    const params = new URLSearchParams({ q: state.q, page: state.page, size: 8 });
+    if (state.minEcts) params.set('minEcts', state.minEcts);
+    if (state.tag) params.set('tag', state.tag);
+    try {
+      if (state.mode === 'compare') {
+        if (!state.q.trim()) { $('meta').textContent = 'Type something to compare.'; $('sql-results').innerHTML = $('es-results').innerHTML = ''; return; }
+        const [sql, es] = await Promise.all([
+          api(`/courses/like?q=${encodeURIComponent(state.q)}`, { signal }),
+          api(`/search/explore?${params}`, { signal }),
+        ]);
+        renderCompare(sql, es);
+      } else {
+        renderEs(await api(`/search/explore?${params}`, { signal }));
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') $('meta').textContent = `Error: ${err.message}`;
+    }
+  }
+
+  const toast = (text) => { const t = $('toast'); t.textContent = text; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); };
+  let timer;
+  const schedule = () => { clearTimeout(timer); timer = setTimeout(run, 150); };
+
+  // ---- events ------------------------------------------------------------------
+  $('q').addEventListener('input', (e) => { state.q = e.target.value; state.page = 1; schedule(); });
+  $('ects').addEventListener('change', (e) => { state.minEcts = e.target.value; state.page = 1; run(); });
+  $('mode-es').addEventListener('click', () => { state.mode = 'es'; run(); });
+  $('mode-cmp').addEventListener('click', () => { state.mode = 'compare'; run(); });
+  document.addEventListener('click', async (e) => {
+    const t = e.target.closest('button'); if (!t) return;
+    if (t.dataset.q !== undefined) { state.q = t.dataset.q; state.page = 1; run(); }
+    else if (t.dataset.tag !== undefined) { state.tag = state.tag === t.dataset.tag ? '' : t.dataset.tag; state.page = 1; run(); }
+    else if (t.dataset.page !== undefined) { state.page = Number(t.dataset.page); run(); }
+    else if (t.dataset.del !== undefined) {
+      if (!confirm('Delete this course from PostgreSQL and the index?')) return;
+      try { await api(`/courses/${t.dataset.del}`, { method: 'DELETE' }); toast('Deleted from both systems'); run(); } catch (err) { toast(err.message); }
+    }
+  });
+  $('add-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const body = {
+      code: f.get('code'), title: f.get('title'), description: f.get('description'), lecturer: f.get('lecturer'),
+      ects: Number(f.get('ects')), maxParticipants: 30,
+      tags: String(f.get('tags') ?? '').split(',').map((s) => s.trim()).filter(Boolean),
+    };
+    try {
+      const course = await api('/courses', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+      toast(`Saved in PostgreSQL, indexed as id ${course.id}. Search for it now.`);
+      e.target.reset(); state.q = course.title; state.page = 1; run();
+    } catch (err) { toast(err.message); }
+  });
+  $('reindex').addEventListener('click', async () => {
+    try { const r = await api('/search/reindex', { method: 'POST' }); toast(`Rebuilt index "${r.index}" from PostgreSQL: ${r.indexed} courses`); run(); } catch (err) { toast(err.message); }
+  });
+
+  // ---- health badges ------------------------------------------------------------
+  api('/health').then((h) => {
+    $('v-es').textContent = h.elasticsearch; $('dot-es').classList.add('ok');
+    $('v-pg').textContent = h.postgres.split(' ')[1]; $('dot-pg').classList.add('ok');
+  }).catch(() => { $('dot-es').classList.add('bad'); $('dot-pg').classList.add('bad'); $('v-es').textContent = $('v-pg').textContent = 'unreachable'; });
+
+  readUrl(); syncControls(); run();
+</script>
+</body>
+</html>
