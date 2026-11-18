@@ -14,8 +14,9 @@
       --paper: #ffffff;
     }
     @media (prefers-color-scheme: dark) {
-      :root { --ink: #f2f2ee; --muted: #a3a7ae; --panel: #1b1c1f; --line: #2c2e33; --paper: #111214; }
+      :root:not([data-theme="light"]) { --ink: #f2f2ee; --muted: #a3a7ae; --panel: #1b1c1f; --line: #2c2e33; --paper: #111214; }
     }
+    :root[data-theme="dark"] { --ink: #f2f2ee; --muted: #a3a7ae; --panel: #1b1c1f; --line: #2c2e33; --paper: #111214; }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
     body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 Calibri, "Segoe UI", system-ui, sans-serif; }
@@ -90,6 +91,7 @@
       <p class="tagline">PostgreSQL keeps the truth. Elasticsearch finds things.</p>
     </div>
     <div class="status" id="status" aria-live="polite">
+      <button type="button" id="theme" title="Switch between light and dark (light is easier to read on a projector)">Light / dark</button>
       <span><span class="dot" id="dot-es"></span>Elasticsearch <b id="v-es">...</b></span>
       <span><span class="dot" id="dot-pg"></span>PostgreSQL <b id="v-pg">...</b></span>
     </div>
@@ -296,6 +298,20 @@
     $('v-es').textContent = h.elasticsearch; $('dot-es').classList.add('ok');
     $('v-pg').textContent = h.postgres.split(' ')[1]; $('dot-pg').classList.add('ok');
   }).catch(() => { $('dot-es').classList.add('bad'); $('dot-pg').classList.add('bad'); $('v-es').textContent = $('v-pg').textContent = 'unreachable'; });
+
+  // ---- theme: ?theme=light|dark, or the last choice, or the system setting --------
+  const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+                  set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } } };
+  const fromUrl = new URLSearchParams(location.search).get('theme');
+  const applyTheme = (t) => { if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; };
+  applyTheme(fromUrl ?? store.get('theme'));
+  $('theme').addEventListener('click', () => {
+    const dark = document.documentElement.dataset.theme
+      ? document.documentElement.dataset.theme === 'dark'
+      : matchMedia('(prefers-color-scheme: dark)').matches;
+    const next = dark ? 'light' : 'dark';
+    applyTheme(next); store.set('theme', next);
+  });
 
   readUrl(); syncControls(); run();
 </script>
