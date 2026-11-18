@@ -47,23 +47,15 @@ export class SearchService implements OnModuleInit {
   // The simple search from the slides: GET /search/courses?q=...
   // ---------------------------------------------------------------------------
   async search(q: string) {
-    const result = await this.es.search<CourseDocument>({
-      index: this.index,
-      query: {
-        multi_match: {
-          query: q,
-          fields: ['title^3', 'description'],
-          fuzziness: 'AUTO',
-        },
-      },
-      highlight: { fields: { description: {} } },
-    });
-    return result.hits.hits.map((hit) => ({
-      id: Number(hit._id),
-      score: hit._score,
-      ...(hit._source as CourseDocument),
-      highlight: hit.highlight?.description,
-    }));
+    // TODO (stretch exercise, step 1): ask Elasticsearch.
+    //   - this.es.search({ index: this.index, query: { multi_match: ... }, highlight: ... })
+    //   - search "title" (boosted: title^3) and "description", with fuzziness 'AUTO'
+    //   - highlight the "description" field
+    //   - map each hit to { id, score, ...the document, highlight }
+    // The same query, as a JSON request, is in demo/kibana-console.txt (multi_match).
+    // `explore` below is a bigger version of the same idea.
+    void q;
+    throw new Error('TODO: implement SearchService.search');
   }
 
   // ---------------------------------------------------------------------------

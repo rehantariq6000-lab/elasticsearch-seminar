@@ -40,12 +40,11 @@ export class CoursesService {
   async create(dto: CreateCourse) {
     const course = await this.save(this.courses.create(dto));
 
-    await this.es.index({
-      index: this.index,
-      id: String(course.id),
-      document: toDocument(course),
-      refresh: 'wait_for',
-    });
+    // TODO (stretch exercise, step 2): index a copy of the new course.
+    //   - this.es.index({ index: this.index, id: String(course.id), document: toDocument(course), ... })
+    //   - the same id in both places: the Postgres id is the Elasticsearch _id
+    //   - refresh: 'wait_for' makes the response wait until the document is searchable
+    // Compare with `update` below, which already does it.
 
     return course;
   }
