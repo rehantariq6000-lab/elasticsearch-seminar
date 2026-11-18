@@ -30,46 +30,46 @@ If something is off, `npm run demo` tells you which step differs from what the s
 
 Slide numbers refer to `slides/Elasticsearch(RS).pptx`. **Predict first, then run** is the rule for the whole demo.
 
-### The hook (slide 12)
+### The hook (slide 13)
 
 1. In PostgreSQL: `SELECT title FROM course WHERE description ILIKE '%databse%';` → **0 rows**.
 2. In Kibana: the *typo with fuzziness AUTO* request → **Introduction to Databases** first, 21 hits.
 3. Do not explain how yet. Say: "by the end of part one you will know exactly why this works."
 
-### Analyzers (slide 17)
+### Analyzers (slide 18)
 
 Run both `_analyze` requests. The `english` analyzer turns `Searching the Databases quickly` into `search`, `databas`, `quickli`. Point out `quickli`: rules, not a dictionary. The `title` field gives `web`, `development`, `fundamentals`.
 
-### First index and first search (slides 25 to 27)
+### First index and first search (slides 26 to 28)
 
 `docker compose up -d`, `PUT courses` with the mapping, `_bulk`, then the first `match` on `description` for `databases`. Show `hits.total`, `hits.hits`, `_id`, `_score`, `_source`. The top hit is NoSQL Databases (score about 2.1). Introduction to Databases is found too: its text only says "database". That is the analyzer at work.
 
-### Demo 1: exact lookup (slides 28 and 29)
+### Demo 1: exact lookup (slides 29 and 30)
 
 Rehan reads the choices and takes a vote: what will a search for `MI150` return? Then: **"Sanath, run the exact lookup."** One hit: course 8, Web Design. Same job as `WHERE code = 'MI150'`. Ask: and with lowercase `mi150`? Nothing: `term` is exact and case-sensitive.
 
-### Demo 2: either word or both (slides 31 and 32)
+### Demo 2: either word or both (slides 32 and 33)
 
 Run the either-word query first and show the four IDs: 8, 10, 11, 12. Pairs predict for thirty seconds: which IDs stay if both words are required? Rerun with `"operator": "and"`: **10 and 12**. Ask: which two disappear and which word is each missing? (8 lacks "development", 11 lacks "web".)
 
-### Demo 3: the ECTS filter (slides 34 and 35)
+### Demo 3: the ECTS filter (slides 35 and 36)
 
 Keep the both-words query on screen. Which match survives a minimum of 5 ECTS? Run it with the range in `bool.filter`: **10** (course 12 is worth only 3). Follow-up: what if we lower the minimum to 3? Both come back. Matching decides who qualifies, ranking orders the matches, filtering removes documents without touching the score.
 
-### Query DSL tour (slides 36 to 40)
+### Query DSL tour (slides 37 to 41)
 
 `multi_match` without and with `title^3` (scores 2.86 and 2.52 become 8.59 and 7.57), fuzziness, highlighting (`<em>database</em>`), aggregations (`data` 13, `backend` 12), then the **AI check**: `term` on `title` with `Databases` returns 0 hits. Ask the room why before you explain.
 
-### Pair lab (slides 41 to 44)
+### Pair lab (slides 42 to 45)
 
 See [`../lab/README.md`](../lab/README.md). The insert request for course 13 is the last step of `requests.mjs`. Run the whole thing yourself once as the model answer, then `DELETE courses/_doc/13` again before the room starts.
 
-### The finale: the web page
+### The finale: the web page (slide 51)
 
 Open <http://localhost:3000/>.
 
-1. Type `databse`. Results appear as you type, the matched words are highlighted, the tag facets on the left count the matches.
-2. Click **Compare with SQL LIKE**: **0 rows** on the left, 21 ranked results on the right. This is slide 12, but as a product.
+1. Type `databse`. Use the **Light / dark** button: light is easier to read on a projector. Results appear as you type, the matched words are highlighted, the tag facets on the left count the matches.
+2. Click **Compare with SQL LIKE**: **0 rows** on the left, 21 ranked results on the right. This is slide 13, but as a product.
 3. Try the chips: `web developmnt`, `serch engin`, `dokcer`, and the sentence `how search engines find documents`.
 4. Click a tag, set **Minimum ECTS** to 5: filters combine with the text query.
 5. Open **Write side**, add a course (for example title `Quantum Computing Lab`), and search for it straight away. It is findable immediately because the write waited for the refresh.
