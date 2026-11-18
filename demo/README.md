@@ -8,7 +8,28 @@ The demo runs in three layers. Use as many as the room needs.
 | **2. The web page** | `app/` at <http://localhost:3000/>: search-as-you-type, highlighting, SQL-vs-Elasticsearch compare mode | The finale |
 | **3. The terminal** | `npm run demo`: runs every request and checks the result | Fallback if the console fails, and a self-test before you start |
 
-All three show the same results, because they come from the same source: [`requests.mjs`](requests.mjs).
+The Kibana and terminal demos use the same requests from [`requests.mjs`](requests.mjs). The web page uses the NestJS API to show similar searches on the same course catalog.
+
+## Rehearse offline
+
+From the repository root, run:
+
+```bash
+npm run demo -- --preview
+npm run demo -- --preview --step
+```
+
+The preview prints each presenter cue, HTTP request, and expected result. With `--step`, press Enter when the class has made its prediction. Run `npm run demo` with Elasticsearch running to verify the results live.
+
+## Follow the code in VS Code
+
+| Open | What to look for |
+|---|---|
+| [`requests.mjs`](requests.mjs) | Start with `typo-plain` and the fuzzy query that follows it. The `body` is the query and `expect` tells the runner what to check. |
+| [`scripts/demo.mjs`](../scripts/demo.mjs) | The loop prints each step, then previews the expectation or sends the request and checks the response. |
+| [`scripts/lib.mjs`](../scripts/lib.mjs) | `es()` sends the HTTP request. It uses POST for searches with a JSON body because Node fetch disallows GET bodies. |
+| [`app/public/index.html`](../app/public/index.html) | The search page calls `/search/explore` for ranked results and `/courses/like` for the SQL comparison. |
+| [`search.service.ts`](../app/src/search/search.service.ts) and [`courses.service.ts`](../app/src/courses/courses.service.ts) | The search service queries Elasticsearch. The courses service uses PostgreSQL and updates the indexed copies when courses change. |
 
 ## Before the session
 
@@ -81,7 +102,7 @@ Open <http://localhost:3000/>.
 | Problem | Fallback |
 |---|---|
 | Kibana is not up yet | Use `demo/demo.http` in VS Code (REST Client extension) or `curl` |
-| Docker or the network fails | `npm run demo -- --step` pauses after every step, or use the expected results on the slides |
+| Elasticsearch is unavailable | `npm run demo -- --preview --step` shows the scripted expectations, or use the slides |
 | A step shows a different result | `npm run es:reset` and run the step again |
 | The web page is empty | `curl -X POST localhost:3000/search/reindex` |
 
