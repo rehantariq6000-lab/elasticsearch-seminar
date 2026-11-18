@@ -1,0 +1,356 @@
+# Live demo: Kibana Dev Tools console
+# Generated from demo/requests.mjs. Run "npm run demo:files" after changing it.
+# Select one request and press Ctrl+Enter (Cmd+Enter on macOS).
+
+
+#### SETUP ####
+
+# Is Elasticsearch running?
+# The tagline is a classic. If this answers, Docker, the port and the container all work.
+GET /
+
+
+#### THE HOOK ####
+
+# A typo, without fuzziness
+# Run the same typo in Postgres first (ILIKE finds 0 rows, see demo/README.md). Plain match finds nothing either.
+GET courses/_search
+{
+  "query": {
+    "match": {
+      "description": "databse"
+    }
+  }
+}
+
+# The same typo, with fuzziness AUTO
+# One extra option and the right course comes back first. Do not explain how yet.
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "match": {
+      "description": {
+        "query": "databse",
+        "fuzziness": "AUTO"
+      }
+    }
+  }
+}
+
+
+#### ANALYZERS ####
+
+# What does the english analyzer make of a sentence?
+# Tokenize, lowercase, drop stop words, stem. Note quickly becomes quickli: rules, not a dictionary.
+POST courses/_analyze
+{
+  "analyzer": "english",
+  "text": "Searching the Databases quickly"
+}
+
+# And our title field (standard analyzer)?
+# The title field only splits and lowercases. This is why the web/development term lists are so clean.
+POST courses/_analyze
+{
+  "field": "title",
+  "text": "Web Development Fundamentals"
+}
+
+
+#### FIRST SEARCH ####
+
+# Our first search
+# hits.total, then hits.hits with _id, _score, _source. Introduction to Databases is found too: stemming.
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "match": {
+      "description": "databases"
+    }
+  }
+}
+
+
+#### DEMO 1: EXACT LOOKUP ####
+
+# Predict: what will a search for MI150 return?
+# Take the vote first. Same job as WHERE code = 'MI150'. term on a keyword field.
+GET courses/_search
+{
+  "query": {
+    "term": {
+      "code": "MI150"
+    }
+  }
+}
+
+# And with lowercase mi150?
+# term is exact and case-sensitive. Nothing found.
+GET courses/_search
+{
+  "query": {
+    "term": {
+      "code": "mi150"
+    }
+  }
+}
+
+
+#### DEMO 2: EITHER WORD OR BOTH ####
+
+# Either word (the default)
+# Run this first and show the four IDs.
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "match": {
+      "title": "web development"
+    }
+  }
+}
+
+# Predict: which IDs stay when both words are required?
+# Pairs predict for thirty seconds. Only the operator changes. 8 lacks development, 11 lacks web.
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "match": {
+      "title": {
+        "query": "web development",
+        "operator": "and"
+      }
+    }
+  }
+}
+
+
+#### DEMO 3: ECTS FILTER ####
+
+# Predict: which match survives a minimum of 5 ECTS?
+# Match goes in must, the range goes in filter. Course 12 is worth only 3 ECTS.
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "title": {
+              "query": "web development",
+              "operator": "and"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "ects": {
+              "gte": 5
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+# What if we lower the minimum to 3?
+# Eligibility changes, scores do not. Both courses qualify again.
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "title": {
+              "query": "web development",
+              "operator": "and"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "ects": {
+              "gte": 3
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+#### QUERY DSL ####
+
+# bool with must, filter and must_not
+# Courses about search, exactly 5 ECTS, not tagged sql.
+GET courses/_search
+{
+  "_source": ["code", "title", "ects", "tags"],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "description": "search"
+          }
+        }
+      ],
+      "filter": [
+        {
+          "term": {
+            "ects": 5
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "tags": "sql"
+          }
+        }
+      ]
+    }
+  }
+}
+
+# multi_match over title and description
+# Write down the scores: about 2.86 and 2.52.
+GET courses/_search
+{
+  "_source": ["title"],
+  "query": {
+    "multi_match": {
+      "query": "search",
+      "fields": ["title", "description"]
+    }
+  }
+}
+
+# The same query with title^3
+# A match in the title now counts three times: about 8.59 and 7.57. Courses that only mention it stay put.
+GET courses/_search
+{
+  "_source": ["title"],
+  "query": {
+    "multi_match": {
+      "query": "search",
+      "fields": ["title^3", "description"]
+    }
+  }
+}
+
+# Highlighting: show why it matched
+# The matched words come back wrapped in em tags. Same effect as the yellow marker in the slides.
+GET courses/_search
+{
+  "size": 2,
+  "_source": ["title"],
+  "query": {
+    "match": {
+      "description": "databases"
+    }
+  },
+  "highlight": {
+    "fields": {
+      "description": {}
+    }
+  }
+}
+
+# Aggregations: GROUP BY for search
+# size 0 means counts only, no hits. This is how you build the facets next to search results.
+GET courses/_search
+{
+  "size": 0,
+  "aggs": {
+    "by_tag": {
+      "terms": {
+        "field": "tags"
+      }
+    }
+  }
+}
+
+
+#### PITFALLS ####
+
+# AI check: why zero hits?
+# term skips the analyzer. The index holds "databases", not "Databases". Fix: use match.
+GET courses/_search
+{
+  "query": {
+    "term": {
+      "title": "Databases"
+    }
+  }
+}
+
+# Deep pagination has a limit
+# from + size is capped at 10,000 by default. Use search_after for next page.
+GET courses/_search
+{
+  "from": 10000,
+  "size": 10,
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+#### WRITING ####
+
+# Index one more course (ID 13)
+# refresh=wait_for: the response returns once the document is searchable. This is the pair lab task 3.
+PUT courses/_doc/13?refresh=wait_for
+{
+  "course_id": 13,
+  "code": "WEB320",
+  "title": "Advanced Web Development",
+  "ects": 5
+}
+
+# Rerun the filtered search
+# Course 13 qualifies: both words in the title and 5 ECTS.
+GET courses/_search
+{
+  "_source": ["code", "title", "ects"],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "title": {
+              "query": "web development",
+              "operator": "and"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "ects": {
+              "gte": 5
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+# Remove course 13 again
+# Cleanup, so the demo can be repeated from the start.
+DELETE courses/_doc/13?refresh=true

@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "properties": {
+      "course_id": { "type": "integer" },
+      "code": { "type": "keyword" },
+      "title": { "type": "text", "analyzer": "standard" },
+      "description": { "type": "text", "analyzer": "english" },
+      "lecturer": { "type": "keyword" },
+      "ects": { "type": "integer" },
+      "max_participants": { "type": "integer" },
+      "tags": { "type": "keyword" }
+    }
+  }
+}

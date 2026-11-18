@@ -1,0 +1,545 @@
+[
+  {
+    "course_id": 1,
+    "code": "DB105",
+    "title": "Introduction to Databases",
+    "description": "Learn how a database stores, protects and retrieves data. We cover tables, keys, SQL queries and why every serious application needs a reliable database.",
+    "lecturer": "Dr. Weber",
+    "ects": 5,
+    "max_participants": 33,
+    "tags": [
+      "databases",
+      "sql"
+    ]
+  },
+  {
+    "course_id": 2,
+    "code": "DB110",
+    "title": "Data Modelling in Practice",
+    "description": "Turn a real-world problem into an entity relationship model and map it to relational tables. Includes normalization and common modelling mistakes.",
+    "lecturer": "Dr. Weber",
+    "ects": 5,
+    "max_participants": 46,
+    "tags": [
+      "databases",
+      "design"
+    ]
+  },
+  {
+    "course_id": 3,
+    "code": "BE115",
+    "title": "Backend Engineering with NestJS",
+    "description": "Build a REST API with NestJS and TypeORM. Controllers, services, dependency injection, validation and end-to-end tests against a PostgreSQL database.",
+    "lecturer": "Prof. Hartmann",
+    "ects": 6,
+    "max_participants": 59,
+    "tags": [
+      "backend",
+      "databases",
+      "typescript"
+    ]
+  },
+  {
+    "course_id": 4,
+    "code": "OPS120",
+    "title": "Containers and Docker",
+    "description": "Package applications with Docker and run whole stacks with Docker Compose. Images, volumes, networks and reproducible development environments.",
+    "lecturer": "Dr. Okafor",
+    "ects": 3,
+    "max_participants": 72,
+    "tags": [
+      "devops",
+      "backend"
+    ]
+  },
+  {
+    "course_id": 5,
+    "code": "SR125",
+    "title": "Information Retrieval and Search",
+    "description": "How search engines find documents among millions. Tokenization, inverted indexes, ranking with TF-IDF and BM25, and how to measure search quality.",
+    "lecturer": "Prof. Lindqvist",
+    "ects": 5,
+    "max_participants": 85,
+    "tags": [
+      "search",
+      "data"
+    ]
+  },
+  {
+    "course_id": 6,
+    "code": "DB130",
+    "title": "Advanced SQL and Query Optimization",
+    "description": "Window functions, common table expressions and indexes. Read query plans and make slow database queries fast.",
+    "lecturer": "Dr. Weber",
+    "ects": 5,
+    "max_participants": 98,
+    "tags": [
+      "databases",
+      "sql"
+    ]
+  },
+  {
+    "course_id": 7,
+    "code": "DB135",
+    "title": "NoSQL Databases",
+    "description": "Document stores, key-value stores and graph databases compared with relational systems. When a schema-free database is the right choice and when it is not.",
+    "lecturer": "Dr. Rossi",
+    "ects": 5,
+    "max_participants": 31,
+    "tags": [
+      "databases",
+      "data"
+    ]
+  },
+  {
+    "course_id": 8,
+    "code": "MI150",
+    "title": "Web Design",
+    "description": "Design pages people enjoy using. Layout, typography, colour and accessibility, and how a design becomes a working website.",
+    "lecturer": "Dr. Okafor",
+    "ects": 5,
+    "max_participants": 44,
+    "tags": [
+      "web",
+      "design"
+    ]
+  },
+  {
+    "course_id": 9,
+    "code": "WEB145",
+    "title": "Frontend Engineering with React",
+    "description": "Components, state and hooks in React. Fetch data from an API, handle forms and write maintainable user interfaces.",
+    "lecturer": "Dr. Okafor",
+    "ects": 5,
+    "max_participants": 57,
+    "tags": [
+      "web",
+      "typescript"
+    ]
+  },
+  {
+    "course_id": 10,
+    "code": "WEB150",
+    "title": "Web Development Fundamentals",
+    "description": "HTML, CSS and JavaScript from the ground up. Build responsive pages and connect them to a backend API.",
+    "lecturer": "Prof. Hartmann",
+    "ects": 6,
+    "max_participants": 70,
+    "tags": [
+      "web",
+      "typescript"
+    ]
+  },
+  {
+    "course_id": 11,
+    "code": "TS155",
+    "title": "Game Development",
+    "description": "Game loops, physics and rendering. Build a small 2D game and learn what performance really means.",
+    "lecturer": "Prof. Hartmann",
+    "ects": 5,
+    "max_participants": 83,
+    "tags": [
+      "typescript",
+      "design"
+    ]
+  },
+  {
+    "course_id": 12,
+    "code": "WEB160",
+    "title": "Web Development Studio",
+    "description": "A project studio for small teams. Plan, build and launch a web application for a real client, from the first sketch to the deployed site.",
+    "lecturer": "Prof. Hartmann",
+    "ects": 3,
+    "max_participants": 96,
+    "tags": [
+      "web",
+      "backend"
+    ]
+  },
+  {
+    "course_id": 14,
+    "code": "AI170",
+    "title": "Machine Learning Basics",
+    "description": "Supervised and unsupervised learning, training and evaluating models, overfitting and the data preparation that makes or breaks a project.",
+    "lecturer": "Prof. Lindqvist",
+    "ects": 6,
+    "max_participants": 42,
+    "tags": [
+      "ai",
+      "data"
+    ]
+  },
+  {
+    "course_id": 15,
+    "code": "AI175",
+    "title": "Natural Language Processing",
+    "description": "Turn text into numbers. Tokenization, stemming, embeddings and text classification, with a project on searching large document collections.",
+    "lecturer": "Prof. Lindqvist",
+    "ects": 6,
+    "max_participants": 55,
+    "tags": [
+      "ai",
+      "search"
+    ]
+  },
+  {
+    "course_id": 16,
+    "code": "DA180",
+    "title": "Big Data Processing",
+    "description": "Process datasets that do not fit on one machine. Batch and stream processing, partitioning, and the trade-offs of distributed systems.",
+    "lecturer": "Dr. Rossi",
+    "ects": 5,
+    "max_participants": 68,
+    "tags": [
+      "data",
+      "devops"
+    ]
+  },
+  {
+    "course_id": 17,
+    "code": "OPS185",
+    "title": "Cloud Computing",
+    "description": "Virtual machines, managed databases, object storage and serverless functions. Design an application that scales and costs little when idle.",
+    "lecturer": "Dr. Okafor",
+    "ects": 5,
+    "max_participants": 81,
+    "tags": [
+      "devops",
+      "backend"
+    ]
+  },
+  {
+    "course_id": 18,
+    "code": "BE190",
+    "title": "Software Engineering and Testing",
+    "description": "Version control, code review and automated testing. Write unit tests, integration tests and end-to-end tests that catch real bugs.",
+    "lecturer": "Prof. Hartmann",
+    "ects": 5,
+    "max_participants": 94,
+    "tags": [
+      "backend",
+      "design"
+    ]
+  },
+  {
+    "course_id": 19,
+    "code": "SEC195",
+    "title": "Information Security",
+    "description": "Authentication, authorization, encryption and the most common web vulnerabilities. Protect an API and the data behind it.",
+    "lecturer": "Dr. Rossi",
+    "ects": 5,
+    "max_participants": 27,
+    "tags": [
+      "security",
+      "backend"
+    ]
+  },
+  {
+    "course_id": 20,
+    "code": "DB200",
+    "title": "Data Warehousing and Analytics",
+    "description": "Design a data warehouse with fact and dimension tables. Load data with ETL pipelines and answer business questions with aggregations.",
+    "lecturer": "Dr. Weber",
+    "ects": 5,
+    "max_participants": 40,
+    "tags": [
+      "databases",
+      "data"
+    ]
+  },
+  {
+    "course_id": 21,
+    "code": "DA205",
+    "title": "Data Visualization",
+    "description": "Choose the right chart for your data. Build dashboards that explain results clearly instead of decorating them.",
+    "lecturer": "Dr. Okafor",
+    "ects": 3,
+    "max_participants": 53,
+    "tags": [
+      "data",
+      "design"
+    ]
+  },
+  {
+    "course_id": 22,
+    "code": "OPS210",
+    "title": "Distributed Systems",
+    "description": "Replication, consensus and failure. Why distributed databases and search clusters split data into shards and keep copies on several nodes.",
+    "lecturer": "Dr. Rossi",
+    "ects": 6,
+    "max_participants": 66,
+    "tags": [
+      "devops",
+      "data"
+    ]
+  },
+  {
+    "course_id": 23,
+    "code": "WEB215",
+    "title": "Mobile App Engineering",
+    "description": "Build a cross-platform mobile app that talks to a REST API, stores data offline and syncs it when the network returns.",
+    "lecturer": "Prof. Hartmann",
+    "ects": 5,
+    "max_participants": 79,
+    "tags": [
+      "web",
+      "typescript"
+    ]
+  },
+  {
+    "course_id": 24,
+    "code": "DES220",
+    "title": "Human-Computer Interaction",
+    "description": "Design interfaces people can actually use. User research, prototyping and usability testing, including the design of search boxes and filters.",
+    "lecturer": "Dr. Okafor",
+    "ects": 3,
+    "max_participants": 92,
+    "tags": [
+      "design",
+      "web"
+    ]
+  },
+  {
+    "course_id": 25,
+    "code": "OPS225",
+    "title": "Operating Systems",
+    "description": "Processes, threads, memory management and file systems. Understand what the machine does when your program runs.",
+    "lecturer": "Prof. Lindqvist",
+    "ects": 5,
+    "max_participants": 25,
+    "tags": [
+      "devops"
+    ]
+  },
+  {
+    "course_id": 26,
+    "code": "OPS230",
+    "title": "Computer Networks",
+    "description": "From Ethernet to HTTP. IP addressing, routing, TCP and DNS, and how a request travels from browser to server.",
+    "lecturer": "Dr. Rossi",
+    "ects": 5,
+    "max_participants": 38,
+    "tags": [
+      "devops",
+      "security"
+    ]
+  },
+  {
+    "course_id": 27,
+    "code": "DA235",
+    "title": "Algorithms and Data Structures",
+    "description": "Lists, trees, hash tables and graphs. Analyze running time and choose the data structure that keeps your program fast.",
+    "lecturer": "Prof. Lindqvist",
+    "ects": 6,
+    "max_participants": 51,
+    "tags": [
+      "data",
+      "typescript"
+    ]
+  },
+  {
+    "course_id": 28,
+    "code": "AI240",
+    "title": "Recommender Systems",
+    "description": "Suggest products and content with collaborative filtering and content-based methods. Evaluate recommendations with real user data.",
+    "lecturer": "Prof. Lindqvist",
+    "ects": 5,
+    "max_participants": 64,
+    "tags": [
+      "ai",
+      "data"
+    ]
+  },
+  {
+    "course_id": 29,
+    "code": "BE245",
+    "title": "API Design and Documentation",
+    "description": "Design REST APIs that are consistent and easy to use. Versioning, pagination, error handling and OpenAPI documentation.",
+    "lecturer": "Prof. Hartmann",
+    "ects": 3,
+    "max_participants": 77,
+    "tags": [
+      "backend",
+      "design"
+    ]
+  },
+  {
+    "course_id": 30,
+    "code": "DB250",
+    "title": "Database Administration",
+    "description": "Backup and recovery, user permissions, monitoring and replication for PostgreSQL. Keep a production database healthy.",
+    "lecturer": "Dr. Weber",
+    "ects": 5,
+    "max_participants": 90,
+    "tags": [
+      "databases",
+      "devops"
+    ]
+  },
+  {
+    "course_id": 31,
+    "code": "DB255",
+    "title": "Graph Databases",
+    "description": "Model connected data as nodes and relationships. Query social networks and recommendation graphs with a graph query language.",
+    "lecturer": "Dr. Rossi",
+    "ects": 3,
+    "max_participants": 23,
+    "tags": [
+      "databases",
+      "data"
+    ]
+  },
+  {
+    "course_id": 32,
+    "code": "SR260",
+    "title": "Search-Driven Applications",
+    "description": "Add full-text search to a web application. Index documents, rank results, correct typos and keep the search index in sync with the main database.",
+    "lecturer": "Prof. Lindqvist",
+    "ects": 5,
+    "max_participants": 36,
+    "tags": [
+      "search",
+      "backend"
+    ]
+  },
+  {
+    "course_id": 33,
+    "code": "OPS265",
+    "title": "Logging and Monitoring",
+    "description": "Collect logs and metrics, search them quickly and alert on problems. Dashboards for the health of a running service.",
+    "lecturer": "Dr. Okafor",
+    "ects": 3,
+    "max_participants": 49,
+    "tags": [
+      "devops",
+      "search"
+    ]
+  },
+  {
+    "course_id": 34,
+    "code": "TS270",
+    "title": "TypeScript in Depth",
+    "description": "Types, generics and decorators. Write safer JavaScript and understand how frameworks such as NestJS use the type system.",
+    "lecturer": "Prof. Hartmann",
+    "ects": 3,
+    "max_participants": 62,
+    "tags": [
+      "typescript",
+      "backend"
+    ]
+  },
+  {
+    "course_id": 35,
+    "code": "DES275",
+    "title": "Project Management for Developers",
+    "description": "Plan, estimate and deliver software in a team. Agile methods, issue tracking and honest communication with stakeholders.",
+    "lecturer": "Dr. Okafor",
+    "ects": 3,
+    "max_participants": 75,
+    "tags": [
+      "design"
+    ]
+  },
+  {
+    "course_id": 36,
+    "code": "DA280",
+    "title": "Statistics for Data Science",
+    "description": "Probability, distributions and hypothesis tests. Draw sound conclusions from data and avoid the classic statistical traps.",
+    "lecturer": "Prof. Lindqvist",
+    "ects": 5,
+    "max_participants": 88,
+    "tags": [
+      "data",
+      "ai"
+    ]
+  },
+  {
+    "course_id": 37,
+    "code": "BE285",
+    "title": "Open Source Practice",
+    "description": "Contribute to a real open source project. Read unfamiliar code, write a good pull request and work with maintainers.",
+    "lecturer": "Prof. Hartmann",
+    "ects": 3,
+    "max_participants": 21,
+    "tags": [
+      "backend",
+      "design"
+    ]
+  },
+  {
+    "course_id": 38,
+    "code": "DES290",
+    "title": "Entrepreneurship for Engineers",
+    "description": "From idea to first customers. Validate a product, build a small team and understand the basics of funding.",
+    "lecturer": "Dr. Okafor",
+    "ects": 3,
+    "max_participants": 34,
+    "tags": [
+      "design"
+    ]
+  },
+  {
+    "course_id": 39,
+    "code": "SEC295",
+    "title": "Data Ethics and Privacy",
+    "description": "GDPR, consent and responsible handling of personal data. What developers must consider before storing or indexing user data.",
+    "lecturer": "Dr. Rossi",
+    "ects": 3,
+    "max_participants": 47,
+    "tags": [
+      "security",
+      "data"
+    ]
+  },
+  {
+    "course_id": 40,
+    "code": "OPS300",
+    "title": "Embedded Systems",
+    "description": "Program microcontrollers, read sensors and control actuators. Real-time constraints and low-level debugging.",
+    "lecturer": "Prof. Lindqvist",
+    "ects": 5,
+    "max_participants": 60,
+    "tags": [
+      "devops"
+    ]
+  },
+  {
+    "course_id": 41,
+    "code": "OPS305",
+    "title": "Continuous Integration and Delivery",
+    "description": "Automate builds, tests and deployments. Build pipelines that ship small changes safely and often.",
+    "lecturer": "Dr. Okafor",
+    "ects": 3,
+    "max_participants": 73,
+    "tags": [
+      "devops",
+      "backend"
+    ]
+  },
+  {
+    "course_id": 42,
+    "code": "DA310",
+    "title": "Knowledge Graphs and Linked Data",
+    "description": "Describe knowledge so machines can use it. Ontologies, linked data and querying large knowledge graphs.",
+    "lecturer": "Dr. Rossi",
+    "ects": 5,
+    "max_participants": 86,
+    "tags": [
+      "data",
+      "search"
+    ]
+  },
+  {
+    "course_id": 43,
+    "code": "BE315",
+    "title": "Capstone Project",
+    "description": "Build a complete application in a team, from data model and API to deployment. Present the result and defend your design decisions.",
+    "lecturer": "Dr. Weber",
+    "ects": 6,
+    "max_participants": 99,
+    "tags": [
+      "backend",
+      "databases"
+    ]
+  }
+]
